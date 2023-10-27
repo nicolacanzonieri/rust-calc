@@ -1,0 +1,219 @@
+import "fonts/coolvetica/coolvetica rg.otf";
+
+import {VerticalBox} from "std-widgets.slint";
+
+// Contiene tutti i "callbacks" per i vari pulsanti
+export global CalcLogic {
+    callback button-pressed(string);
+}
+
+// Global Properties
+export global ButtonColors {
+    out property <color> background-pressed: #414141;
+    out property <color> background-not-pressed: #94badd;
+    out property <color> border-pressed: #777777;
+    out property <color> border-not-pressed: #7591ac;
+}
+
+// Custom Widget MyButton
+component MyButton {
+
+    in property <string> text;
+    in property <string> id;
+
+    in property <length> font-size;
+
+    Rectangle {
+        
+        tchArea := TouchArea{
+
+            clicked => {
+                CalcLogic.button-pressed(root.text == "" ? root.id : root.text);
+            }
+
+        }
+
+        background: tchArea.pressed ? ButtonColors.background-pressed : ButtonColors.background-not-pressed;
+        border-radius: 4px;
+        border-width: 2.5px;
+        border-color: tchArea.pressed ? ButtonColors.border-pressed : ButtonColors.border-not-pressed;
+            
+    }
+
+    Text {
+        
+        text: root.text;
+        font-size: root.font-size;
+        color: #030303;
+
+    }
+
+    @children
+    
+}
+
+export component Calculator inherits Window {
+
+    in property <float> value: 0;
+
+    in property <length> button-font-size: 17px;
+    in property <length> button-small-font-size: 13px;
+
+    default-font-family: "Coolvetica";
+
+    background: @linear-gradient(0deg, #1f2a36 0%, #0e1a25 30%, #000000 100%);
+
+    min-height: 350px;
+    min-width: 250px;
+
+    preferred-height: 350px;
+    preferred-width: 250px;
+
+    vertBox := VerticalBox{
+        
+        Text {
+
+            text: value;
+
+            font-size: 30px;
+            vertical-alignment: center;
+            horizontal-alignment: right;
+            color: #bbbbbb;
+
+        }
+
+        grid := GridLayout {
+
+            padding: 2px;
+            spacing: 5px;
+
+            Row {
+                btn-C := MyButton{ 
+                    text: "C";
+                    font-size: button-small-font-size;
+                }
+
+                btn-CE := MyButton{
+                    text: "CE";
+                    font-size: button-small-font-size;
+                    width: grid.width/4.3;
+                    height: vertBox.height/8.5;
+                }
+
+                btn-pow := MyButton{
+                    text: "^x";
+                    font-size: button-small-font-size;
+                }
+
+                btn-square := MyButton {
+                    text: "^2";
+                    font-size: button-small-font-size;
+                }
+
+            }
+
+            Row {
+                btn-7 := MyButton{ 
+                    text: "7";
+                    font-size: button-font-size; 
+                }
+
+                btn-8 := MyButton{ 
+                    text: "8";
+                    font-size: button-font-size; 
+                }
+
+                btn-9 := MyButton{ 
+                    text: "9"; 
+                    font-size: button-font-size;                
+                }
+
+                btn-div := MyButton{ 
+                    text: ":"; 
+                    font-size: button-font-size;
+                }
+                
+            }
+
+            Row {
+                btn-4 := MyButton{ 
+                    text: "4"; 
+                    font-size: button-font-size;
+                }
+
+                btn-5 := MyButton{ 
+                    text: "5"; 
+                    font-size: button-font-size;
+                }
+
+                btn-6 := MyButton{ 
+                    text: "6"; 
+                    font-size: button-font-size;
+                }
+
+                btn-mul := MyButton{ 
+                    text: "*"; 
+                    font-size: button-font-size;
+                }
+                
+            }
+
+            Row {
+                btn-1 := MyButton{ 
+                    text: "1"; 
+                    font-size: button-font-size;
+                }
+
+                btn-2 := MyButton{
+                    text: "2"; 
+                    font-size: button-font-size;
+                }
+
+                btn-3 := MyButton{
+                    text: "3"; 
+                    font-size: button-font-size;
+                }
+
+                btn-sub := MyButton{
+                    text: "-"; 
+                    font-size: button-font-size;
+                }
+                
+            }
+
+            Row {
+                btn-0 := MyButton{ 
+                    text: "0"; 
+                    font-size: button-font-size;
+                }
+
+                btn-result := MyButton{ 
+                    text: "="; 
+                    font-size: button-font-size;
+                }
+                
+                btn-del := MyButton{
+
+                    width: grid.width/4 - 4px;
+                    height: vertBox.height/8.5;
+
+                    id: "del";
+
+                    Image {
+                        source: @image-url("resources/Del_Button_Dark.svg");
+                        width: 20px;
+                        height: 13px;
+                    }
+
+                }
+
+                btn-sum := MyButton{ 
+                    text: "+"; 
+                    font-size: button-font-size;
+                }
+            }
+                
+        }
+    }
+
+}
